@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 20:11:08 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/01 18:52:03 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/01 21:02:26 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 //할당이 안됐는데, 프리하는 경우
 //free 한 후, 댕글링 포인터를 프리하는 경우
 /* fd : save pos where it's finished.*/
+/*만약 EOF를 만나면 buf에 뒤에는 0으로 다 채워지나?*/
 #define BUFFER_SIZE 32//임시용
 static char	*find_LF_return_line(char *buf)
 {
@@ -34,16 +35,16 @@ static char	*find_LF_return_line(char *buf)
 	if (!buf[start])
 		return (buf);
 	after_LF = ft_substr(buf, start, ft_strlen(buf) - start);
-	return (ft_substr(buf, 0, start));
+	return (ft_substr(buf, 0, start + 1));
 }
 
 char	*get_next_line(int fd)
 {
-	char		*buf;//is this static too?
+	static char	*buf;
 	static char	*line;
-	ssize_t			byte;
+	ssize_t		byte;
 
-	if (fd < 0)
+	if (fd < 0 || fd > 255 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buf = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buf)
@@ -57,9 +58,5 @@ char	*get_next_line(int fd)
 	}
 	if (byte < 0)
 		return (NULL);
-	if (byte == 0)
-		return (ft_strdup(""));
-	free(buf);
-	buf = NULL;
 	return (line);
 }
