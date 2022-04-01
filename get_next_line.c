@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 20:11:08 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/01 18:30:10 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/01 18:52:03 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,21 +39,27 @@ static char	*find_LF_return_line(char *buf)
 
 char	*get_next_line(int fd)
 {
-	char		buf[BUFFER_SIZE + 1];//is this static too?
+	char		*buf;//is this static too?
 	static char	*line;
-	int			byte;
+	ssize_t			byte;
 
+	if (fd < 0)
+		return (NULL);
+	buf = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!buf)
+		return (NULL);
 	byte = read(fd, buf, BUFFER_SIZE);// 이러면 fd의 값은 3으로 고정이고 가리키는 주소만 바뀌는거?
 	buf[BUFFER_SIZE] = 0;
 	while (byte > 0 && ft_strchr(line,'\n') == NULL)
 	{
 		line = find_LF_return_line(buf);
 		byte = read(fd, buf, BUFFER_SIZE);
-		buf[BUFFER_SIZE] = 0;
 	}
 	if (byte < 0)
 		return (NULL);
 	if (byte == 0)
 		return (ft_strdup(""));
+	free(buf);
+	buf = NULL;
 	return (line);
 }
