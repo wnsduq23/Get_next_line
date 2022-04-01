@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 20:11:08 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/01 21:02:26 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/01 21:03:36 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 //free 한 후, 댕글링 포인터를 프리하는 경우
 /* fd : save pos where it's finished.*/
 /*만약 EOF를 만나면 buf에 뒤에는 0으로 다 채워지나?*/
-#define BUFFER_SIZE 32//임시용
 static char	*find_LF_return_line(char *buf)
 {
 	static char		*after_LF;
