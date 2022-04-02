@@ -6,53 +6,11 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/01 15:18:27 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/01 15:20:51 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/02 17:27:32 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-char	*ft_substr(char const *s, unsigned int start, size_t n)
-{
-	unsigned int	i;
-	char			*ret;
-	size_t			ret_s;
-	size_t			ret_len;
-
-	if (!s)
-		return (0);
-	if (ft_strlen(s) < n)
-		ret_len = ft_strlen(s);
-	else
-		ret_len = n;
-	ret = malloc(sizeof(char) *(ret_len + 1));
-	if (!ret)
-		return (0);
-	i = 0;
-	ret_s = 0;
-	while (s[i])
-	{
-		if (start <= i && ret_s < n)
-			ret[ret_s++] = s[i];
-		i++;
-	}
-	ret[ret_s] = 0;
-	return (ret);
-}
-
-char	*ft_strdup(const char *s)
-{
-	char	*dst;
-	size_t	s_len;
-
-	s_len = ft_strlen(s);
-	dst = malloc(sizeof(char) * (s_len + 1));
-	if (!dst)
-		return (0);
-	ft_memcpy(dst, s, s_len);
-	dst[s_len] = 0;
-	return (dst);
-}
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -65,6 +23,36 @@ char	*ft_strchr(const char *s, int c)
 	if (c == 0)
 		return ((char *)s);
 	return (0);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+
+{
+	char	*total;
+	size_t	s1_len;
+	size_t	s2_len;
+
+	if (!s1 || !s2)
+		return (0);
+	s1_len = ft_strlen(s1);
+	s2_len = ft_strlen(s2);
+	total = malloc(s1_len + s2_len + 1);
+	if (!total)
+		return (0);
+	ft_memcpy(total, s1, s1_len);
+	ft_memcpy(total + s1_len, s2, s2_len);
+	total[s1_len + s2_len] = 0;
+	return (total);
+}
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (*(s + i))
+		i++;
+	return (i);
 }
 
 void	*ft_memcpy(void *dst, const void *src, size_t n)
@@ -82,12 +70,17 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	return (dst);
 }
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlcpy(char *dst, const char *src, size_t n)
 {
-	size_t	i;
+	size_t	srclen;
 
-	i = 0;
-	while (*(s + i))
-		i++;
-	return (i);
+	srclen = ft_strlen(src);
+	if (srclen + 1 < n)
+		ft_memcpy(dst, src, srclen + 1);
+	else if (n != 0)
+	{
+		ft_memcpy(dst, src, n - 1);
+		dst[n - 1] = 0;
+	}
+	return (srclen);
 }

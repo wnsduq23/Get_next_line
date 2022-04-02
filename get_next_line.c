@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 20:11:08 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/01 21:03:36 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/02 17:29:44 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,44 +18,110 @@
 //할당이 안됐는데, 프리하는 경우
 //free 한 후, 댕글링 포인터를 프리하는 경우
 /* fd : save pos where it's finished.*/
-/*만약 EOF를 만나면 buf에 뒤에는 0으로 다 채워지나?*/
-static char	*find_LF_return_line(char *buf)
-{
-	static char		*after_LF;
-	unsigned int	start;
-
-	start = 0;
-	while (buf[start])
-	{
-		if (ft_strchr(buf, '\n') != NULL)
-			break ;
-		start++;
-	}
-	if (!buf[start])
-		return (buf);
-	after_LF = ft_substr(buf, start, ft_strlen(buf) - start);
-	return (ft_substr(buf, 0, start + 1));
-}
-
 char	*get_next_line(int fd)
 {
-	static char	*buf;
-	static char	*line;
-	ssize_t		byte;
+	static char	*s_save;
+	char		*line;
 
-	if (fd < 0 || fd > 255 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	buf = malloc(sizeof(char) * BUFFER_SIZE + 1);
-	if (!buf)
-		return (NULL);
-	byte = read(fd, buf, BUFFER_SIZE);// 이러면 fd의 값은 3으로 고정이고 가리키는 주소만 바뀌는거?
-	buf[BUFFER_SIZE] = 0;
-	while (byte > 0 && ft_strchr(line,'\n') == NULL)
+	s_save = read_iter(&s_save, fd);
+	if (s_save == NULL || *s_save == '\0')
 	{
-		line = find_LF_return_line(buf);
-		byte = read(fd, buf, BUFFER_SIZE);
+		free(s_save);
+		s_save = NULL;
+		return (NULL);
 	}
-	if (byte < 0)
+	line = get_line(s_save);
+	if (line == NULL)
+	{
+		free(s_save);
+		s_save = NULL;
+		return (NULL);
+	}
+	s_save = set_remains(&s_save, ft_strlen(line));
+	if (s_save == NULL)
 		return (NULL);
 	return (line);
 }
+
+char	*read_iter(char **s_save, int fd)
+{
+	char		*buf;
+	ssize_t		nread;
+	char		*temp; /* append_buf()하며 리셋되는 save를 free하기 위해서 */
+	char		*new;
+
+	buf = malloc(BUFFER_SIZE + 1);
+	if (buf == NULL)
+		return (NULL);
+	nread = 0;
+	new = *s_save;
+	while (new == NULL || !ft_strchr(new, '\n'))
+	{	
+		nread = read(fd, buf, BUFFER_SIZE);
+		if (nread <= 0)
+			break ;
+		buf[nread] = '\0';
+		temp = new;
+		new = append_buf(new, buf); /* ft_strjoin(temp, buf)과 같은 결과를 낸다. */
+		free(temp);
+	}
+	free(buf);
+	buf = NULL;
+	if (nread < 0)
+		return (NULL);
+	return (new);
+}
+
+char	*get_line(char const *save)
+{
+	size_t	len; /* return할 line의 길이를 저장 */
+	char	*line;
+	if (ft_strchr(save, '\n')) /* \n이 있을 때 */
+		len = ft_strchr(save, '\n') - save + 1; /* +1은 \n을 위한 자리 */
+	else /* \n이 없을 때 == 마지막 줄일 때 */
+		len = ft_strchr(save, '\0') - save;
+	line = malloc(len + 1);
+	if (line == NULL)
+		return (NULL);
+	ft_strlcpy(line, save, len + 1);
+	return (line);
+}
+
+char	*set_remains(char **s_save, size_t offset)
+{
+	char	*new;
+
+	new = malloc(ft_strlen(*s_save + offset) + 1);
+	if (new == NULL)
+		return (NULL);
+	ft_strlcpy(new, *s_save + offset, ft_strlen(*s_save + offset) + 1);
+	free(*s_save);
+	*s_save = NULL;
+	return (new);
+}
+
+char	*append_buf(char const *save, char const *buf)
+{
+	char	*new;
+
+	if (buf == NULL)
+		return (NULL);
+	else if (save == NULL && buf)
+	{
+		new = malloc(ft_strlen(buf) + 1);
+		if (new == NULL)
+			return (NULL);
+		ft_strlcpy(new, buf, ft_strlen(buf) + 1); 
+		return (new);
+	}
+	new = malloc(ft_strlen(save) + ft_strlen(buf) + 1);
+	if (new == NULL)
+		return (NULL);
+	ft_strlcpy(new, save, ft_strlen(save) + 1); 
+	ft_strlcpy(new + ft_strlen(save), buf, ft_strlen(buf) + 1); 
+
+	return (new);
+}
+
