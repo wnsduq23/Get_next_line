@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/02 17:19:25 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/02 17:30:19 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/02 17:37:06 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 # include <unistd.h>
 typedef struct node
 {
-	int index;
+	int fd;
+	char *save;
+	struct node *prev;
 	struct node *next;	
 }t_list;
 char	*read_iter(char **s_save, int fd);
@@ -30,4 +32,5 @@ size_t	ft_strlen(const char *s);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 char	*ft_strjoin(char const *s1, char const *s2);
 size_t	ft_strlcpy(char *dst, const char *src, size_t n);
+char	*set_remains(char **s_save, size_t offset);
 #endif

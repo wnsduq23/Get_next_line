@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 20:11:08 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/02 17:29:44 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/02 19:10:23 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 //할당이 안됐는데, 프리하는 경우
 //free 한 후, 댕글링 포인터를 프리하는 경우
 /* fd : save pos where it's finished.*/
+/* 이거 static을 여기 함수들은 다 붙여야할까? */
 char	*get_next_line(int fd)
 {
 	static char	*s_save;
@@ -48,28 +49,28 @@ char	*get_next_line(int fd)
 char	*read_iter(char **s_save, int fd)
 {
 	char		*buf;
-	ssize_t		nread;
+	ssize_t		byte;
 	char		*temp; /* append_buf()하며 리셋되는 save를 free하기 위해서 */
 	char		*new;
 
 	buf = malloc(BUFFER_SIZE + 1);
 	if (buf == NULL)
 		return (NULL);
-	nread = 0;
+	byte = 0;
 	new = *s_save;
 	while (new == NULL || !ft_strchr(new, '\n'))
 	{	
-		nread = read(fd, buf, BUFFER_SIZE);
-		if (nread <= 0)
+		byte = read(fd, buf, BUFFER_SIZE);
+		if (byte <= 0)
 			break ;
-		buf[nread] = '\0';
+		buf[byte] = '\0';
 		temp = new;
 		new = append_buf(new, buf); /* ft_strjoin(temp, buf)과 같은 결과를 낸다. */
 		free(temp);
 	}
 	free(buf);
 	buf = NULL;
-	if (nread < 0)
+	if (byte < 0)
 		return (NULL);
 	return (new);
 }

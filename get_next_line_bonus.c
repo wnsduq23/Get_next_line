@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/02 17:16:40 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/02 17:19:11 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/02 17:37:52 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
@@ -100,3 +100,84 @@ void	del_node(t_list **node)
 	free(*node); /* 4. node 프리 */
 	*node = NULL; /* (댕글링 포인터 방지) */
 }
+
+char	*read_iter(char **s_save, int fd)
+{
+	char		*buf;
+	ssize_t		nread;
+	char		*temp; /* append_buf()하며 리셋되는 save를 free하기 위해서 */
+	char		*new;
+
+	buf = malloc(BUFFER_SIZE + 1);
+	if (buf == NULL)
+		return (NULL);
+	nread = 0;
+	new = *s_save;
+	while (new == NULL || !ft_strchr(new, '\n'))
+	{	
+		nread = read(fd, buf, BUFFER_SIZE);
+		if (nread <= 0)
+			break ;
+		buf[nread] = '\0';
+		temp = new;
+		new = append_buf(new, buf); /* ft_strjoin(temp, buf)과 같은 결과를 낸다. */
+		free(temp);
+	}
+	free(buf);
+	buf = NULL;
+	if (nread < 0)
+		return (NULL);
+	return (new);
+}
+
+char	*get_line(char const *save)
+{
+	size_t	len; /* return할 line의 길이를 저장 */
+	char	*line;
+	if (ft_strchr(save, '\n')) /* \n이 있을 때 */
+		len = ft_strchr(save, '\n') - save + 1; /* +1은 \n을 위한 자리 */
+	else /* \n이 없을 때 == 마지막 줄일 때 */
+		len = ft_strchr(save, '\0') - save;
+	line = malloc(len + 1);
+	if (line == NULL)
+		return (NULL);
+	ft_strlcpy(line, save, len + 1);
+	return (line);
+}
+
+char	*set_remains(char **s_save, size_t offset)
+{
+	char	*new;
+
+	new = malloc(ft_strlen(*s_save + offset) + 1);
+	if (new == NULL)
+		return (NULL);
+	ft_strlcpy(new, *s_save + offset, ft_strlen(*s_save + offset) + 1);
+	free(*s_save);
+	*s_save = NULL;
+	return (new);
+}
+
+char	*append_buf(char const *save, char const *buf)
+{
+	char	*new;
+
+	if (buf == NULL)
+		return (NULL);
+	else if (save == NULL && buf)
+	{
+		new = malloc(ft_strlen(buf) + 1);
+		if (new == NULL)
+			return (NULL);
+		ft_strlcpy(new, buf, ft_strlen(buf) + 1); 
+		return (new);
+	}
+	new = malloc(ft_strlen(save) + ft_strlen(buf) + 1);
+	if (new == NULL)
+		return (NULL);
+	ft_strlcpy(new, save, ft_strlen(save) + 1); 
+	ft_strlcpy(new + ft_strlen(save), buf, ft_strlen(buf) + 1); 
+
+	return (new);
+}
+
