@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/02 17:19:37 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/08 12:50:41 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/08 13:08:22 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
@@ -39,13 +39,21 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	return (dst);
 }
 
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (*(s + i))
+		i++;
+	return (i);
+}
+
 size_t	ft_strlcpy(char *dst, const char *src, size_t n)
 {
 	size_t	srclen;
 
-	srclen = 0;
-	while (src[srclen])
-		srclen++;
+	srclen = ft_strlen(src);
 	if (srclen + 1 < n)
 		ft_memcpy(dst, src, srclen + 1);
 	else if (n != 0)

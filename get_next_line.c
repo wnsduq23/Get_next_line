@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 20:11:08 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/08 12:29:32 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/08 13:03:21 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,33 +67,6 @@ static char	*append_buf(char const *save, char const *buf)
 	return (new);
 }
 
-char	*get_next_line(int fd)
-{
-	static char	*s_save;
-	char		*line;
-
-	if (fd < 0 || BUFFER_SIZE < 1)
-		return (NULL);
-	s_save = read_iter(&s_save, fd);
-	if (s_save == NULL || *s_save == '\0')
-	{
-		free(s_save);
-		s_save = NULL;
-		return (NULL);
-	}
-	line = get_line(s_save);
-	if (line == NULL)
-	{
-		free(s_save);
-		s_save = NULL;
-		return (NULL);
-	}
-	s_save = set_remains(&s_save, ft_strlen(line));
-	if (s_save == NULL)
-		return (NULL);
-	return (line);
-}
-
 static char	*read_iter(char **s_save, int fd)
 {
 	char		*buf;
@@ -121,4 +94,31 @@ static char	*read_iter(char **s_save, int fd)
 	if (byte < 0)
 		return (NULL);
 	return (new);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*s_save;
+	char		*line;
+
+	if (fd < 0 || BUFFER_SIZE < 1)
+		return (NULL);
+	s_save = read_iter(&s_save, fd);
+	if (s_save == NULL || *s_save == '\0')
+	{
+		free(s_save);
+		s_save = NULL;
+		return (NULL);
+	}
+	line = get_line(s_save);
+	if (line == NULL)
+	{
+		free(s_save);
+		s_save = NULL;
+		return (NULL);
+	}
+	s_save = set_remains(&s_save, ft_strlen(line));
+	if (s_save == NULL)
+		return (NULL);
+	return (line);
 }

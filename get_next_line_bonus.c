@@ -6,39 +6,10 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/02 17:16:40 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/08 12:55:13 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/08 13:11:50 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
-
-static char	*read_iter(char **s_save, int fd)
-{
-	char		*buf;
-	ssize_t		nread;
-	char		*temp;
-	char		*new;
-
-	buf = malloc(BUFFER_SIZE + 1);
-	if (buf == NULL)
-		return (NULL);
-	nread = 0;
-	new = *s_save;
-	while (new == NULL || !ft_strchr(new, '\n'))
-	{	
-		nread = read(fd, buf, BUFFER_SIZE);
-		if (nread <= 0)
-			break ;
-		buf[nread] = '\0';
-		temp = new;
-		new = append_buf(new, buf);
-		free(temp);
-	}
-	free(buf);
-	buf = NULL;
-	if (nread < 0)
-		return (NULL);
-	return (new);
-}
 
 static char	*get_line(char const *save)
 {
@@ -88,6 +59,35 @@ static char	*append_buf(char const *save, char const *buf)
 		return (NULL);
 	ft_strlcpy(new, save, ft_strlen(save) + 1);
 	ft_strlcpy(new + ft_strlen(save), buf, ft_strlen(buf) + 1);
+	return (new);
+}
+
+static char	*read_iter(char **s_save, int fd)
+{
+	char		*buf;
+	ssize_t		nread;
+	char		*temp;
+	char		*new;
+
+	buf = malloc(BUFFER_SIZE + 1);
+	if (buf == NULL)
+		return (NULL);
+	nread = 0;
+	new = *s_save;
+	while (new == NULL || !ft_strchr(new, '\n'))
+	{	
+		nread = read(fd, buf, BUFFER_SIZE);
+		if (nread <= 0)
+			break ;
+		buf[nread] = '\0';
+		temp = new;
+		new = append_buf(new, buf);
+		free(temp);
+	}
+	free(buf);
+	buf = NULL;
+	if (nread < 0)
+		return (NULL);
 	return (new);
 }
 
