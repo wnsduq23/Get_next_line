@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/01 15:18:27 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/08 12:18:27 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/08 12:49:23 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,39 +55,4 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t n)
 		dst[n - 1] = 0;
 	}
 	return (srclen);
-}
-
-t_list	*get_node(t_list *head, int fd)
-{
-	t_list	*node;
-
-	node = head->next;
-	while (node)
-	{
-		if (node->fd == fd)
-			return (node);
-		else
-			node = node->next;
-	}
-	node = malloc(sizeof(t_list));
-	if (node == NULL)
-		return (NULL);
-	node->fd = fd;
-	node->save = NULL;
-	node->prev = head;
-	node->next = head->next;
-	if (head->next)
-		head->next->prev = node;
-	head->next = node;
-	return (node);
-}
-
-void	del_node(t_list **node)
-{
-	free((*node)->save);
-	(*node)->prev->next = (*node)->next;
-	if ((*node)->next)
-		(*node)->next->prev = (*node)->prev;
-	free(*node);
-	*node = NULL;
 }

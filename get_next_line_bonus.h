@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/02 17:19:25 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/08 12:37:09 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/08 12:55:38 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 
 typedef struct s_node
 {
-	int			fd;
-	char		*save;
-	struct node	*prev;
-	struct node	*next;
+	int				fd;
+	char			*save;
+	struct s_node	*prev;
+	struct s_node	*next;
 }t_list;
 static char	*read_iter(char **s_save, int fd);
 static char	*get_line(char const *save);
