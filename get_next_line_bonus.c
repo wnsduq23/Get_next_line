@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/02 17:16:40 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/08 13:11:50 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/11 16:51:12 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
@@ -104,21 +104,12 @@ char	*get_next_line(int fd)
 		return (NULL);
 	node->save = read_iter(&(node->save), fd);
 	if (node->save == NULL || *(node->save) == '\0')
-	{
-		del_node(&node);
-		return (NULL);
-	}
+		return (del_node(&node));
 	line = get_line(node->save);
 	if (line == NULL)
-	{
-		del_node(&node);
-		return (NULL);
-	}
+		return (del_node(&node));
 	node->save = set_remains(&(node->save), ft_strlen(line));
 	if (node->save == NULL)
-	{
-		del_node(&node);
-		return (NULL);
-	}
+		return (del_node(&node));
 	return (line);
 }

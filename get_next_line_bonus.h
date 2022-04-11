@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/02 17:19:25 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/08 13:09:04 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/11 16:51:22 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,9 @@ typedef struct s_node
 }t_list;
 char		*get_next_line(int fd);
 t_list		*get_node(t_list *head, int fd);
-void		del_node(t_list **node);
+void		*del_node(t_list **node);
 char		*ft_strchr(const char *s, int c);
 size_t		ft_strlen(const char *s);
-void		*ft_memcpy(void *dst, const void *src, size_t n);
 char		*ft_strjoin(char const *s1, char const *s2);
 size_t		ft_strlcpy(char *dst, const char *src, size_t n);
 #endif

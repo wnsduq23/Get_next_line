@@ -6,15 +6,15 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 20:11:08 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/08 13:03:21 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/11 17:38:42 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-/* static char *line : have to return 'line include \n'  */
-// find memory leak
-// if func return buf , means there is no \n so have to take next line in GNL
-/* fd : save pos where it's finished.*/
+/** static char *line : have to return 'line include \n'  */
+/** find memory leak */
+/** if func return buf , means there is no \n so have to take next line in GNL */
+/** fd : save pos where it's finished. */
 
 static char	*get_line(char const *save)
 {
@@ -67,7 +67,7 @@ static char	*append_buf(char const *save, char const *buf)
 	return (new);
 }
 
-static char	*read_iter(char **s_save, int fd)
+static char	*read_iter(char **p_save, int fd)
 {
 	char		*buf;
 	ssize_t		byte;
@@ -78,7 +78,7 @@ static char	*read_iter(char **s_save, int fd)
 	if (buf == NULL)
 		return (NULL);
 	byte = 0;
-	new = *s_save;
+	new = *p_save;
 	while (new == NULL || !ft_strchr(new, '\n'))
 	{	
 		byte = read(fd, buf, BUFFER_SIZE);
@@ -98,27 +98,27 @@ static char	*read_iter(char **s_save, int fd)
 
 char	*get_next_line(int fd)
 {
-	static char	*s_save;
+	static char	*save;
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	s_save = read_iter(&s_save, fd);
-	if (s_save == NULL || *s_save == '\0')
+	save = read_iter(&save, fd);
+	if (save == NULL || *save == '\0')
 	{
-		free(s_save);
-		s_save = NULL;
+		free(save);
+		save = NULL;
 		return (NULL);
 	}
-	line = get_line(s_save);
+	line = get_line(save);
 	if (line == NULL)
 	{
-		free(s_save);
-		s_save = NULL;
+		free(save);
+		save = NULL;
 		return (NULL);
 	}
-	s_save = set_remains(&s_save, ft_strlen(line));
-	if (s_save == NULL)
+	save = set_remains(&save, ft_strlen(line));
+	if (save == NULL)
 		return (NULL);
 	return (line);
 }
