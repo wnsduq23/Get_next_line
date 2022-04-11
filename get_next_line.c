@@ -6,14 +6,13 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 20:11:08 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/11 17:38:42 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/11 18:08:29 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 /** static char *line : have to return 'line include \n'  */
 /** find memory leak */
-/** if func return buf , means there is no \n so have to take next line in GNL */
 /** fd : save pos where it's finished. */
 
 static char	*get_line(char const *save)
