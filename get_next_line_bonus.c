@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/02 17:16:40 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/11 16:51:12 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/23 19:11:25 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
@@ -40,7 +40,7 @@ static char	*set_remains(char **s_save, size_t offset)
 	return (new);
 }
 
-static char	*append_buf(char const *save, char const *buf)
+static char	*update_new_malloc(char const *save, char const *buf)
 {
 	char	*new;
 
@@ -62,31 +62,30 @@ static char	*append_buf(char const *save, char const *buf)
 	return (new);
 }
 
-static char	*read_iter(char **s_save, int fd)
+static char	*read_fd(char **s_save, int fd)
 {
 	char		*buf;
-	ssize_t		nread;
+	ssize_t		byte;
 	char		*temp;
 	char		*new;
 
 	buf = malloc(BUFFER_SIZE + 1);
 	if (buf == NULL)
 		return (NULL);
-	nread = 0;
 	new = *s_save;
 	while (new == NULL || !ft_strchr(new, '\n'))
 	{	
-		nread = read(fd, buf, BUFFER_SIZE);
-		if (nread <= 0)
+		byte = read(fd, buf, BUFFER_SIZE);
+		if (byte <= 0)
 			break ;
-		buf[nread] = '\0';
+		buf[byte] = '\0';
 		temp = new;
-		new = append_buf(new, buf);
+		new = update_new_malloc(new, buf);
 		free(temp);
 	}
 	free(buf);
 	buf = NULL;
-	if (nread < 0)
+	if (byte < 0)
 		return (NULL);
 	return (new);
 }
@@ -102,7 +101,7 @@ char	*get_next_line(int fd)
 	node = get_node(&head, fd);
 	if (node == NULL)
 		return (NULL);
-	node->save = read_iter(&(node->save), fd);
+	node->save = read_fd(&(node->save), fd);
 	if (node->save == NULL || *(node->save) == '\0')
 		return (del_node(&node));
 	line = get_line(node->save);

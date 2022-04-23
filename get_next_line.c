@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 20:11:08 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/11 18:08:29 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/23 19:08:28 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static char	*set_remains(char **s_save, size_t offset)
 	return (new);
 }
 
-static char	*append_buf(char const *save, char const *buf)
+static char	*update_new_malloc(char const *save, char const *buf)
 {
 	char	*new;
 
@@ -66,7 +66,7 @@ static char	*append_buf(char const *save, char const *buf)
 	return (new);
 }
 
-static char	*read_iter(char **p_save, int fd)
+static char	*read_fd(char **p_save, int fd)
 {
 	char		*buf;
 	ssize_t		byte;
@@ -76,17 +76,17 @@ static char	*read_iter(char **p_save, int fd)
 	buf = malloc(BUFFER_SIZE + 1);
 	if (buf == NULL)
 		return (NULL);
-	byte = 0;
 	new = *p_save;
 	while (new == NULL || !ft_strchr(new, '\n'))
 	{	
 		byte = read(fd, buf, BUFFER_SIZE);
 		if (byte <= 0)
 			break ;
-		buf[byte] = '\0';
+		buf[byte] = 0;
 		temp = new;
-		new = append_buf(new, buf);
+		new = update_new_malloc(new, buf);
 		free(temp);
+		temp = NULL;
 	}
 	free(buf);
 	buf = NULL;
@@ -102,8 +102,10 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	save = read_iter(&save, fd);
-	if (save == NULL || *save == '\0')
+	save = read_fd(&save, fd);
+	if (save == NULL)
+		return (NULL);
+	if (*save == 0)
 	{
 		free(save);
 		save = NULL;
@@ -111,11 +113,7 @@ char	*get_next_line(int fd)
 	}
 	line = get_line(save);
 	if (line == NULL)
-	{
-		free(save);
-		save = NULL;
 		return (NULL);
-	}
 	save = set_remains(&save, ft_strlen(line));
 	if (save == NULL)
 		return (NULL);

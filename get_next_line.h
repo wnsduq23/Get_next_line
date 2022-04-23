@@ -6,7 +6,7 @@
 /*   By: junykim <junykim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 20:20:14 by junykim           #+#    #+#             */
-/*   Updated: 2022/04/08 13:08:56 by junykim          ###   ########.fr       */
+/*   Updated: 2022/04/23 16:48:04 by junykim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 char		*ft_strchr(const char *s, int c);
 size_t		ft_strlen(const char *s);
 void		*ft_memcpy(void *dst, const void *src, size_t n);
-char		*ft_strjoin(char const *s1, char const *s2);
 size_t		ft_strlcpy(char *dst, const char *src, size_t n);
 char		*get_next_line(int fd);
 #endif
